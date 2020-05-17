@@ -1,0 +1,70 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Scenes/Scripts/main_script.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/grass.png" type="Texture" id=3]
+[ext_resource path="res://Scenes/Coin.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/HUD.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/audio/Level.wav" type="AudioStream" id=6]
+[ext_resource path="res://assets/audio/Powerup.wav" type="AudioStream" id=7]
+[ext_resource path="res://assets/audio/Coin.wav" type="AudioStream" id=8]
+[ext_resource path="res://Scenes/Powerup.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scenes/Cactus.tscn" type="PackedScene" id=10]
+
+[node name="Main" type="Node2D" groups=[
+"coins",
+]]
+script = ExtResource( 1 )
+Coin = ExtResource( 4 )
+Powerup = ExtResource( 9 )
+playtime = 30
+
+[node name="HUD" parent="." instance=ExtResource( 5 )]
+
+[node name="Background" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 480.0
+margin_bottom = 720.0
+texture = ExtResource( 3 )
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cactus" parent="." instance=ExtResource( 10 )]
+position = Vector2( 332.366, 499.385 )
+
+[node name="CoinContainer" type="Node2D" parent="." groups=[
+"coins",
+]]
+
+[node name="Powerup" parent="." instance=ExtResource( 9 )]
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+visible = false
+
+[node name="PlayerStart" type="Position2D" parent="."]
+position = Vector2( 240, 350 )
+
+[node name="GameTimer" type="Timer" parent="."]
+
+[node name="CoinSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
+
+[node name="PowerSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+
+[node name="LevelSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+
+[node name="EndSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+
+[node name="PowerupTimer" type="Timer" parent="."]
+one_shot = true
+[connection signal="start_game" from="HUD" to="." method="new_game"]
+[connection signal="hurt" from="Player" to="." method="_on_Player_hurt"]
+[connection signal="pickup" from="Player" to="." method="_on_Player_pickup"]
+[connection signal="timeout" from="GameTimer" to="." method="_on_GameTimer_timeout"]
+[connection signal="timeout" from="PowerupTimer" to="." method="_on_PowerupTimer_timeout"]
